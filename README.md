@@ -1,7 +1,13 @@
 # Temporal Electronic Health Record (EHR) Platform
 
+**Database Management Systems Project | M.Tech Information Technology, Anna University (MIT Campus)**
+
 ## Project Overview
 The Temporal Electronic Health Record (EHR) platform is an advanced database management project designed to solve the critical issue of data loss in medical records[cite: 1]. Traditional databases overwrite historical data upon updates, destroying the medical audit trail[cite: 1]. This project implements a system-versioned temporal database to ensure an immutable, automated history of every patient record, diagnosis, and prescription change[cite: 1]. The platform will allow healthcare administrators to execute "time-travel" queries, retrieving the exact state of a patient's record at any specific point in the past without relying on complex application-level manual logging[cite: 1].
+## Tech Stack
+* **Frontend:** HTML, CSS, JavaScript (JSON Payloads, Client-side validation)
+* **Backend:** Node.js, Express.js (REST API, HTTP POST/PUT routing)
+* **Database:** MariaDB (utilizing `WITH SYSTEM VERSIONING` for temporal tables)
 
 ## System Architecture
 The system operates on a 3-tier architecture (Client-Server-Database), ensuring seamless data processing and historical archiving[cite: 1].
