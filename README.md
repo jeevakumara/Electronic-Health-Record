@@ -9,6 +9,10 @@ The Temporal Electronic Health Record (EHR) platform is an advanced database man
 * **Backend:** Node.js, Express.js (REST API, HTTP POST/PUT routing)
 * **Database:** MariaDB (utilizing `WITH SYSTEM VERSIONING` for temporal tables)
 
+## Quick Links & Developer Guides
+* 📖 **[Team Developer & Setup Guide](DEVELOPER_GUIDE.md)** — Docker setup, WSL instructions, and task integration details for Jeeva, Pugal, and Ashqar.
+* 📜 **[REST API Specifications](docs/api-spec.md)** — Comprehensive request/response JSON contracts, endpoints, and status codes.
+
 ## System Architecture
 The system operates on a 3-tier architecture (Client-Server-Database), ensuring seamless data processing and historical archiving[cite: 1].
 * **Frontend:** Users interact via structured HTML forms; data is packaged into a JSON payload and sent via HTTP POST or PUT requests[cite: 1].
