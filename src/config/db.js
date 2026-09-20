@@ -44,9 +44,13 @@ async function testConnection() {
   try {
     conn = await pool.getConnection();
     await conn.query('SELECT 1 AS connected');
-    return true;
+    return { success: true };
   } catch (err) {
-    return false;
+    return { 
+      success: false, 
+      error: err.message, 
+      code: err.code || err.errno 
+    };
   } finally {
     if (conn) conn.release();
   }

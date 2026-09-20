@@ -27,13 +27,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // Liveness & health check endpoint
 app.get('/api/v1/health', async (req, res) => {
-  const isDbConnected = await testConnection();
+  const connStatus = await testConnection();
   res.status(200).json({
     success: true,
     message: 'Temporal EHR Backend Server is operational',
     data: {
       status: 'UP',
-      database: isDbConnected ? 'CONNECTED' : 'DISCONNECTED',
+      database: connStatus.success ? 'CONNECTED' : 'DISCONNECTED',
+      database_error: connStatus.success ? null : connStatus.error,
       uptime_seconds: process.uptime()
     },
     timestamp: new Date().toISOString()

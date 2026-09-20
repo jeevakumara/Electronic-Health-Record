@@ -11,10 +11,11 @@ async function testDatabase() {
   console.log(`User: ${process.env.DB_USER}`);
 
   try {
-    const isConnected = await db.testConnection();
-    if (!isConnected) {
+    const connStatus = await db.testConnection();
+    if (!connStatus.success) {
       console.error('\n❌ Could not connect to MariaDB.');
-      console.log('Please verify:');
+      console.error(`Root cause [${connStatus.code}]: ${connStatus.error}`);
+      console.log('\nPlease verify:');
       console.log('1. MariaDB service is running on port ' + (process.env.DB_PORT || '3306'));
       console.log('2. Credentials in .env match your MariaDB server');
       console.log('3. You have run database/schema.sql in HeidiSQL or your SQL client\n');
