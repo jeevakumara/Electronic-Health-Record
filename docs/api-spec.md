@@ -1,5 +1,5 @@
 # Temporal Electronic Health Record (EHR) — REST API Specification
-**Author:** Dinesh (System Architect & API Developer)  
+**Author:** Dhinesh (System Architect & API Developer)  
 **Project:** Database Management Systems Project | M.Tech IT, Anna University (MIT Campus)  
 **Target Consumers:** Pugal (Frontend UI/UX Developer), Ashqar (Temporal Logic & QA Engineer), Jeeva (Database Engineer)  
 **Base URL:** `http://localhost:5000/api/v1`  

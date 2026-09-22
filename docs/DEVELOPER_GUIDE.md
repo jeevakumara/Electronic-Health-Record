@@ -1,11 +1,11 @@
 # Team Developer & Onboarding Guide
 
 Welcome to the **Temporal Electronic Health Record (EHR)** platform development repository!  
-This guide introduces the backend architecture built by **Dinesh (System Architect & API Developer)** and provides instructions for **Pugal**, **Ashqar**, and **Jeeva** on how to set up the environment and connect their respective modules.
+This guide introduces the backend architecture built by **Dhinesh (System Architect & API Developer)** and provides instructions for **Pugal**, **Ashqar**, and **Jeeva** on how to set up the environment and connect their respective modules.
 
 ---
 
-## 1. Overview of Dinesh's Work (Backend Architecture)
+## 1. Overview of Dhinesh's Work (Backend Architecture)
 
 The backend provides a secure 3-tier bridge between client-side interfaces and the MariaDB system-versioned temporal engine.
 
