@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: temporal_ehr_mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: '123456'
+      MARIADB_DATABASE: 'temporal_ehr'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+      - mariadb_temporal_data:/var/lib/mysql
+
+volumes:
+  mariadb_temporal_data:

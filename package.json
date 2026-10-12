@@ -1,0 +1,32 @@
+{
+  "name": "temporal-ehr-backend",
+  "version": "1.0.0",
+  "description": "Temporal Electronic Health Record (EHR) Platform Backend with MariaDB System Versioning",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test:db": "node scripts/test-connection.js",
+    "test:api": "node scripts/test-api.js"
+  },
+  "keywords": [
+    "temporal-database",
+    "ehr",
+    "mariadb",
+    "system-versioning",
+    "express",
+    "nodejs"
+  ],
+  "author": "Dinesh (System Architect & API Developer)",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mariadb": "^3.3.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
