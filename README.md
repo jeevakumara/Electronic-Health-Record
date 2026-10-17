@@ -10,7 +10,7 @@ The Temporal Electronic Health Record (EHR) platform is an advanced database man
 * **Database:** MariaDB (utilizing `WITH SYSTEM VERSIONING` for temporal tables)
 
 ## Quick Links & Developer Guides
-* 📖 **[Team Developer & Setup Guide](DEVELOPER_GUIDE.md)** — Docker setup, WSL instructions, and task integration details for Jeeva, Pugal, and Ashqar.
+* 📖 **[Team Developer & Setup Guide](docs/DEVELOPER_GUIDE.md)** — Docker setup, WSL instructions, and task integration details for Jeeva, Pugal, and Ashqar.
 * 📜 **[REST API Specifications](docs/api-spec.md)** — Comprehensive request/response JSON contracts, endpoints, and status codes.
 
 ## System Architecture
