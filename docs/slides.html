@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temporal EHR Platform — Project Defense Slides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0284c7;
+      --accent: #8b5cf6;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .slide-deck {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .slide {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem 3.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .slide.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      background: rgba(2, 132, 199, 0.2);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #f1f5f9;
+    }
+    p.lead {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .card-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    .card-box h3 {
+      font-size: 1.1rem;
+      color: #38bdf8;
+      margin-bottom: 0.5rem;
+    }
+    .card-box ul {
+      list-style-position: inside;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: rgba(15, 23, 42, 0.8);
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    pre {
+      background: #090d16;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #7dd3fc;
+      margin: 1rem 0;
+    }
+    .team-badge-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .team-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .team-card strong {
+      color: #38bdf8;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .team-card span {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    /* Controls Footer */
+    .controls {
+      background: rgba(15, 23, 42, 0.9);
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .slide-info {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+    button.ctrl-btn {
+      background: #334155;
+      color: #ffffff;
+      border: none;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button.ctrl-btn:hover {
+      background: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide-deck">
+    <!-- Slide 1 -->
+    <div class="slide active">
+      <div class="badge">DBMS Academic Project • M.Tech IT</div>
+      <h1>Temporal Electronic Health Record (EHR) Platform</h1>
+      <p class="lead">Automated Audit Logging and Point-in-Time Historical Reconstruction Using System-Versioned Relational Databases</p>
+      <div style="margin-top:1.5rem;color:#cbd5e1;font-size:0.95rem">
+        <strong>Department of Information Technology, Anna University (MIT Campus)</strong>
+      </div>
+      <div class="team-badge-list">
+        <div class="team-card">
+          <strong>Dinesh (Leader)</strong>
+          <span>System Architect & API Developer</span>
+        </div>
+        <div class="team-card">
+          <strong>Jeeva</strong>
+          <span>Database Engineer & SQL Developer</span>
+        </div>
+        <div class="team-card">
+          <strong>Pugal</strong>
+          <span>Frontend UI/UX Developer</span>
+        </div>
+        <div class="team-card">
+          <strong>Ashqar</strong>
+          <span>Temporal Logic & QA Engineer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide">
+      <div class="badge">Clinical Motivation</div>
+      <h2>The Medical Audit Dilemma in Healthcare Systems</h2>
+      <p class="lead">Why traditional database update models fail in patient healthcare records.</p>
+      <div class="grid-2">
+        <div class="card-box">
+          <h3>The Mutation Dilemma</h3>
+          <ul>
+            <li>SQL <code>UPDATE</code> statements permanently overwrite old values.</li>
+            <li>Dosage revisions destroy the historical clinical record.</li>
+            <li>Adverse Drug Event (ADE) investigations cannot determine prior states.</li>
+            <li>Vulnerable to intentional or accidental doctor tampering.</li>
+          </ul>
+        </div>
+        <div class="card-box">
+          <h3>Regulatory Imperatives</h3>
+          <ul>
+            <li><strong>HIPAA § 164.312(b)</strong>: Enforces immutable hardware/software audit controls.</li>
+            <li><strong>FDA 21 CFR Part 11</strong>: Computer-generated, time-stamped audit trails.</li>
+            <li><strong>GDPR Article 30</strong>: Explicit records of data processing activities.</li>
+            <li><strong>Solution</strong>: Native SQL:2011 temporal system versioning.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+      <div class="badge">Architectural Comparison</div>
+      <h2>Traditional RDBMS vs. System-Versioned Temporal DBMS</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Evaluation Dimension</th>
+            <th>Traditional RDBMS</th>
+            <th>Trigger/Shadow Logging</th>
+            <th>Our Temporal DBMS (MariaDB)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Update Behavior</strong></td>
+            <td>Overwrites in-place</td>
+            <td>Fires trigger to log table</td>
+            <td><strong>Engine partitions active & historical states</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Audit Immutability</strong></td>
+            <td>❌ Non-existent</td>
+            <td>⚠️ Vulnerable to DBA bypass</td>
+            <td><strong>✅ Tamper-proof engine enforcement</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Time-Travel Queries</strong></td>
+            <td>❌ Impossible</td>
+            <td>⚠️ Complex recursive joins</td>
+            <td><strong>✅ Native FOR SYSTEM_TIME AS OF</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Application Overhead</strong></td>
+            <td>Minimal</td>
+            <td>High (Bloated boilerplate)</td>
+            <td><strong>✅ Zero archival application boilerplate</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Active Read Speed</strong></td>
+            <td>Standard</td>
+            <td>Degrades over time</td>
+            <td><strong>✅ Zero penalty (Separate partitions)</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide">
+      <div class="badge">System Architecture</div>
+      <h2>3-Tier Architecture & End-to-End Data Flow</h2>
+      <p class="lead">Secure, decoupled architecture bridging client requests and the database engine.</p>
+      <div class="grid-2">
+        <div class="card-box">
+          <h3>1. Client Tier (Frontend)</h3>
+          <ul>
+            <li>Interactive medical dashboard, registration & updates.</li>
+            <li>Form input validation before network transmission.</li>
+            <li>Temporal date-time picker for time-travel queries.</li>
+          </ul>
+        </div>
+        <div class="card-box">
+          <h3>2. Server Middleware Tier (Express.js)</h3>
+          <ul>
+            <li>Authorized security middleman (Zero direct DB access).</li>
+            <li>Connection pool to MariaDB with auto-reconnection.</li>
+            <li>Constructs dynamic temporal queries (<code>AS OF</code> & <code>ALL</code>).</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card-box" style="margin-top:1rem">
+        <h3>3. Database Tier (MariaDB 11.4 Engine)</h3>
+        <p style="font-size:0.9rem;color:#cbd5e1">Stores current active rows in primary tables; automatically intercepts mutations and routes superseded records into hidden historical partitions with microsecond precision timestamps.</p>
+      </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide">
+      <div class="badge">Database Engineering</div>
+      <h2>Schema Design with System Versioning</h2>
+      <p class="lead">Implemented in <code>database/schema.sql</code> using <code>WITH SYSTEM VERSIONING</code>.</p>
+      <pre>
+CREATE TABLE patients (
+    patient_id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    age INT, contact_number VARCHAR(15), emergency_details TEXT
+) WITH SYSTEM VERSIONING;
+
+CREATE TABLE prescriptions (
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT, doctor_id INT,
+    diagnosis VARCHAR(255) NOT NULL, medication VARCHAR(255) NOT NULL, dosage VARCHAR(100) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id) ON DELETE CASCADE,
+    FOREIGN KEY (doctor_id) REFERENCES doctors(doctor_id) ON DELETE CASCADE
+) WITH SYSTEM VERSIONING;</pre>
+      <div class="card-box">
+        <h3>The Hidden Mechanics:</h3>
+        <p style="font-size:0.9rem;color:#cbd5e1">MariaDB creates invisible system columns <code>ROW_START</code> and <code>ROW_END</code>. An update atomically closes <code>ROW_END</code> on the previous tuple and inserts the revision with <code>ROW_START = current_timestamp</code>.</p>
+      </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide">
+      <div class="badge">API Design</div>
+      <h2>REST API Specifications & Routing Logic</h2>
+      <p class="lead">Standardized JSON endpoints serving all clinical workflows.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Endpoint</th>
+            <th>Method</th>
+            <th>Role in System</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>/api/v1/dashboard/metrics</code></td>
+            <td>GET</td>
+            <td>Aggregates active patients, doctors, and prescription counts</td>
+          </tr>
+          <tr>
+            <td><code>/api/v1/patients</code></td>
+            <td>POST / GET</td>
+            <td>Registers new patients and supports keyword/ID search</td>
+          </tr>
+          <tr>
+            <td><code>/api/v1/prescriptions/:id</code></td>
+            <td>PUT</td>
+            <td>Updates dosage & triggers MariaDB temporal partition archive</td>
+          </tr>
+          <tr>
+            <td><code>/api/v1/temporal/prescriptions/:id?as_of=...</code></td>
+            <td>GET</td>
+            <td>Point-in-time "Time-Travel" historical reconstruction</td>
+          </tr>
+          <tr>
+            <td><code>/api/v1/temporal/prescriptions/:id/history</code></td>
+            <td>GET</td>
+            <td>Complete chronological audit trail with ROW_START/ROW_END</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide">
+      <div class="badge">Temporal Queries</div>
+      <h2>Time-Travel Query Processing (AS OF & ALL)</h2>
+      <div class="grid-2">
+        <div class="card-box">
+          <h3>1. Point-in-Time Reconstruction</h3>
+          <pre>
+SELECT p.*, pt.full_name, d.full_name
+FROM prescriptions 
+  FOR SYSTEM_TIME AS OF TIMESTAMP(?) p
+LEFT JOIN patients FOR SYSTEM_TIME AS OF ...
+WHERE p.prescription_id = ?;</pre>
+          <p style="font-size:0.85rem;color:#cbd5e1">Reconstructs exact medical regimen at any past moment.</p>
+        </div>
+        <div class="card-box">
+          <h3>2. Full Audit Timeline</h3>
+          <pre>
+SELECT prescription_id, diagnosis, 
+       medication, dosage, 
+       ROW_START, ROW_END
+FROM prescriptions FOR SYSTEM_TIME ALL
+WHERE prescription_id = ?
+ORDER BY ROW_START DESC;</pre>
+          <p style="font-size:0.85rem;color:#cbd5e1">Extracts entire revision sequence across partitions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide">
+      <div class="badge">System Integration</div>
+      <h2>Live UI Integration & Client Test Bench</h2>
+      <p class="lead">5 interactive views demonstrating end-to-end clinical workflows.</p>
+      <div class="grid-2">
+        <div class="card-box">
+          <h3>Interactive Modules</h3>
+          <ul>
+            <li><strong>Admin Dashboard</strong>: Real-time counter cards & recent activities.</li>
+            <li><strong>Patient Registration</strong>: Client & server-side validation.</li>
+            <li><strong>Search & Profile</strong>: Lookups with active prescription tabs.</li>
+          </ul>
+        </div>
+        <div class="card-box">
+          <h3>Temporal Testing Features</h3>
+          <ul>
+            <li><strong>Medical Update Form</strong>: Adjust dosages with instant temporal triggers.</li>
+            <li><strong>Time-Travel Viewer</strong>: DateTime picker to rewind time.</li>
+            <li><strong>Audit Timeline Table</strong>: Chronological revision badges.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide">
+      <div class="badge">Evaluation & Results</div>
+      <h2>Experimental Results & Verification</h2>
+      <p class="lead">Verified via automated integration suite (<code>npm run test:integration</code>).</p>
+      <div class="card-box">
+        <h3>Simulation Outcome:</h3>
+        <ul>
+          <li><strong>Step 1</strong>: Patient #1 prescribed <code>Lisinopril 10mg once daily</code> at $T_1$.</li>
+          <li><strong>Step 2</strong>: Dosage escalated to <code>Lisinopril 20mg / 12.5mg once daily</code> at $T_2$.</li>
+          <li><strong>Step 3 (AS OF $T_1$)</strong>: Database accurately returned initial <code>10mg</code> dosage.</li>
+          <li><strong>Step 4 (ALL)</strong>: Both revisions returned with exact <code>ROW_START</code> and <code>ROW_END</code>.</li>
+          <li><strong>Data Integrity</strong>: <strong>100% (Zero historical data loss)</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide">
+      <div class="badge">Conclusion & Defense</div>
+      <h2>Summary of Achievements & Contributions</h2>
+      <div class="card-box" style="margin-bottom:1rem">
+        <h3>Core Achievements</h3>
+        <ul>
+          <li>Successfully eliminated application-level trigger logging using MariaDB system versioning.</li>
+          <li>Engineered production-grade Node.js/Express REST API with full Swagger/Markdown specs.</li>
+          <li>Proven zero-latency read penalty on current records and tamper-resistant audit trails.</li>
+        </ul>
+      </div>
+      <div class="team-badge-list">
+        <div class="team-card"><strong>Dinesh (Leader)</strong>: Architecture, API design, Express routing, integration tests, report & slides.</div>
+        <div class="team-card"><strong>Jeeva</strong>: MariaDB configuration, DDL scripts, ER models.</div>
+        <div class="team-card"><strong>Pugal</strong>: 5 UI views, CSS layout, date picker.</div>
+        <div class="team-card"><strong>Ashqar</strong>: Temporal AS OF queries, mock dataset, QA testing.</div>
+      </div>
+      <p style="text-align:center;margin-top:1.5rem;color:#38bdf8;font-weight:700">Thank you! Questions & Discussion</p>
+    </div>
+  </div>
+
+  <!-- Footer Navigation Controls -->
+  <footer class="controls">
+    <div class="slide-info" id="slideIndicator">Slide 1 of 10</div>
+    <div class="btn-group">
+      <button class="ctrl-btn" onclick="prevSlide()">◀ Previous</button>
+      <button class="ctrl-btn" onclick="nextSlide()">Next ▶</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicator = document.getElementById('slideIndicator');
+
+    function showSlide(index) {
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      indicator.textContent = `Slide ${index + 1} of ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        showSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        showSlide(currentSlide);
+      }
+    }
+
+    // Keyboard navigation (Left / Right / Space)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+  </script>
+</body>
+</html>
