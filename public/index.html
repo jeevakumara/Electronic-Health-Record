@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Temporal EHR Platform — System Integration Client</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header / Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">⏱️</div>
+        <div>
+          <h1>Temporal EHR Platform</h1>
+          <p class="subtitle">System-Versioned Temporal Database (MariaDB) | M.Tech IT, MIT Campus</p>
+        </div>
+      </div>
+      <div class="system-status">
+        <span class="status-indicator" id="statusIndicator"></span>
+        <span id="statusText">Checking system...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="app-nav">
+    <div class="nav-container">
+      <button class="nav-btn active" data-tab="tab-dashboard">📊 Admin Dashboard</button>
+      <button class="nav-btn" data-tab="tab-register">📝 Patient Registration</button>
+      <button class="nav-btn" data-tab="tab-search">🔍 Patient Search & Profile</button>
+      <button class="nav-btn" data-tab="tab-update">💊 Medical Update Form</button>
+      <button class="nav-btn" data-tab="tab-timetravel">⏳ Time-Travel Audit Viewer</button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="app-main">
+    <!-- Notification Banner -->
+    <div id="alertBanner" class="alert-banner hidden"></div>
+
+    <!-- TAB 1: Admin Dashboard -->
+    <section id="tab-dashboard" class="tab-content active">
+      <div class="section-header">
+        <h2>Admin Overview & System Metrics</h2>
+        <button class="btn btn-secondary" onclick="fetchDashboardMetrics()">🔄 Refresh Metrics</button>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon">👥</div>
+          <div class="metric-info">
+            <span class="metric-label">Total Patients</span>
+            <span class="metric-value" id="metricPatients">-</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🩺</div>
+          <div class="metric-info">
+            <span class="metric-label">Total Doctors</span>
+            <span class="metric-value" id="metricDoctors">-</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">📋</div>
+          <div class="metric-info">
+            <span class="metric-label">Total Prescriptions</span>
+            <span class="metric-value" id="metricPrescriptions">-</span>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon">🛡️</div>
+          <div class="metric-info">
+            <span class="metric-label">Audit Engine</span>
+            <span class="metric-value text-accent">SYSTEM VERSIONED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card recent-activity-card">
+        <h3>Recent Prescription Activity</h3>
+        <p class="card-desc">Real-time prescription logs recorded across active tables.</p>
+        <div class="table-responsive">
+          <table class="data-table" id="recentTable">
+            <thead>
+              <tr>
+                <th>Rx ID</th>
+                <th>Patient</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Medication</th>
+                <th>Dosage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="6" class="text-center">Loading recent activity...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: Patient Registration -->
+    <section id="tab-register" class="tab-content">
+      <div class="section-header">
+        <h2>Register New Patient</h2>
+        <p class="subtitle">Enter patient demographics. Input is validated server-side before insertion.</p>
+      </div>
+
+      <div class="card form-card">
+        <form id="registerForm" onsubmit="handlePatientRegistration(event)">
+          <div class="form-group">
+            <label for="regFullName">Full Name *</label>
+            <input type="text" id="regFullName" required placeholder="e.g. Anandha Krishnan">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="regAge">Age *</label>
+              <input type="number" id="regAge" min="0" max="130" required placeholder="e.g. 45">
+            </div>
+            <div class="form-group">
+              <label for="regContact">Contact Number *</label>
+              <input type="tel" id="regContact" required placeholder="e.g. +91 9876543210">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="regEmergency">Emergency Contact Details</label>
+            <textarea id="regEmergency" rows="3" placeholder="e.g. Spouse: Priya (+91 9876543219)"></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btnSubmitPatient">💾 Register Patient</button>
+            <button type="reset" class="btn btn-secondary">Clear Form</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: Patient Search & Profile -->
+    <section id="tab-search" class="tab-content">
+      <div class="section-header">
+        <h2>Patient Search & Medical Profile</h2>
+        <p class="subtitle">Search patients by Name or ID to view their active diagnoses and medications.</p>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search by patient name or patient ID..." onkeyup="if(event.key==='Enter') searchPatients()">
+        <button class="btn btn-primary" onclick="searchPatients()">🔍 Search</button>
+        <button class="btn btn-secondary" onclick="loadAllPatients()">Show All</button>
+      </div>
+
+      <div class="search-results-layout">
+        <div class="card results-list-card">
+          <h3>Matching Patients</h3>
+          <ul class="patient-list" id="patientList">
+            <li class="empty-state">Enter a search query or click "Show All"</li>
+          </ul>
+        </div>
+
+        <div class="card profile-card" id="profileDetailsCard">
+          <h3>Medical Profile Details</h3>
+          <div id="profileContent" class="empty-state">Select a patient from the list to view their medical profile and active prescriptions.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: Medical Update Form -->
+    <section id="tab-update" class="tab-content">
+      <div class="section-header">
+        <h2>Medical Update & Prescription Mutation</h2>
+        <p class="subtitle">Modifying a prescription automatically triggers MariaDB's <code>WITH SYSTEM VERSIONING</code> engine, archiving the existing record into hidden history partitions.</p>
+      </div>
+
+      <div class="card form-card">
+        <div class="callout-box">
+          <strong>ℹ️ System-Versioning Mechanism:</strong>
+          When you click "Apply Medical Update", the server executes an SQL <code>UPDATE</code>. MariaDB natively closes the timestamp on the existing row, stores it in the temporal partition, and assigns the updated data a new start timestamp without data loss.
+        </div>
+
+        <form id="updatePrescriptionForm" onsubmit="handlePrescriptionUpdate(event)">
+          <div class="form-group">
+            <label for="updatePrescriptionId">Prescription ID *</label>
+            <div class="input-with-button">
+              <input type="number" id="updatePrescriptionId" required placeholder="Enter Prescription ID (e.g. 1)">
+              <button type="button" class="btn btn-secondary" onclick="fetchPrescriptionForUpdate()">Load Details</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="updateDiagnosis">Updated Diagnosis *</label>
+            <input type="text" id="updateDiagnosis" required placeholder="e.g. Essential Hypertension - Stage 2">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="updateMedication">Medication *</label>
+              <input type="text" id="updateMedication" required placeholder="e.g. Amlodipine + Telmisartan">
+            </div>
+            <div class="form-group">
+              <label for="updateDosage">Dosage *</label>
+              <input type="text" id="updateDosage" required placeholder="e.g. 10mg / 40mg once daily">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-warning" id="btnUpdatePrescription">⚡ Apply Medical Update (Trigger Temporal Engine)</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 5: Time-Travel Audit Viewer -->
+    <section id="tab-timetravel" class="tab-content">
+      <div class="section-header">
+        <h2>Temporal Audit Log & "Time-Travel" Viewer</h2>
+        <p class="subtitle">Execute <code>FOR SYSTEM_TIME AS OF</code> queries to view exact historical medical states or inspect the full audit trail with <code>FOR SYSTEM_TIME ALL</code>.</p>
+      </div>
+
+      <div class="card time-travel-query-card">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="ttPrescriptionId">Prescription ID *</label>
+            <input type="number" id="ttPrescriptionId" required placeholder="e.g. 1" value="1">
+          </div>
+          <div class="form-group">
+            <label for="ttDateTime">Select Historical Point-in-Time (AS OF)</label>
+            <input type="datetime-local" id="ttDateTime" step="1">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="queryTimeTravel()">⏳ Execute Time-Travel (AS OF)</button>
+          <button class="btn btn-accent" onclick="queryFullHistory()">📜 View Full Audit Timeline (ALL)</button>
+        </div>
+      </div>
+
+      <!-- Historical Record Result -->
+      <div class="card hidden" id="timeTravelResultCard">
+        <h3>Historical Snapshot (Point-in-Time Reconstruction)</h3>
+        <div id="timeTravelResultContent"></div>
+      </div>
+
+      <!-- Full Chronological History Table -->
+      <div class="card hidden" id="auditTimelineCard">
+        <h3>Complete Temporal Audit Timeline (System-Versioned Partitions)</h3>
+        <p class="card-desc">Every mutation since inception captured automatically by MariaDB with <code>ROW_START</code> and <code>ROW_END</code>.</p>
+        <div class="table-responsive">
+          <table class="data-table" id="timelineTable">
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Diagnosis</th>
+                <th>Medication</th>
+                <th>Dosage</th>
+                <th>Doctor</th>
+                <th>Valid From (ROW_START)</th>
+                <th>Valid To (ROW_END)</th>
+              </tr>
+            </thead>
+            <tbody id="timelineTableBody">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Database Management Systems Project | M.Tech Information Technology, Anna University (MIT Campus)</p>
+    <p>Team: <strong>Dinesh (Leader & System Architect)</strong> | Jeeva (Database) | Pugal (Frontend UI) | Ashqar (Temporal Logic & QA)</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

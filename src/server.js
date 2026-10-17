@@ -21,9 +21,14 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan('dev'));
 }
 
+const path = require('path');
+
 // Request parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static client integration assets
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Liveness & health check endpoint
 app.get('/api/v1/health', async (req, res) => {

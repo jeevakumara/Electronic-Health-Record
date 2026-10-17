@@ -7,7 +7,8 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "test:db": "node scripts/test-connection.js",
-    "test:api": "node scripts/test-api.js"
+    "test:api": "node scripts/test-api.js",
+    "test:integration": "node scripts/integration-test.js"
   },
   "keywords": [
     "temporal-database",
